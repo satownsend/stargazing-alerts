@@ -1,0 +1,23 @@
+package com.satownsend.stargazingalerts.user.dao;
+
+import com.satownsend.stargazingalerts.user.model.User;
+import com.satownsend.stargazingalerts.user.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class UserDao {
+
+    @Autowired
+    private UserRepository repo;
+
+    public User findById(Long id) {
+        return repo.findById(id).get();
+    }
+
+    public List<User> findAll() {
+        return repo.findAll();
+    }
+}

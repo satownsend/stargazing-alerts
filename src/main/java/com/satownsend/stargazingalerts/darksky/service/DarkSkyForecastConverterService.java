@@ -3,12 +3,16 @@ package com.satownsend.stargazingalerts.darksky.service;
 import com.satownsend.stargazingalerts.darksky.model.forecast.DarkSkyForecast;
 import com.satownsend.stargazingalerts.darksky.model.forecast.HourlyData;
 import com.satownsend.stargazingalerts.weatherdata.model.WeatherData;
+import com.satownsend.stargazingalerts.weatherdata.model.WeatherDataFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class DarkSkyForecastConverterService {
+
+    @Autowired private WeatherDataFactory weatherDataFactory;
 
     public Boolean checkTimesMatch(DarkSkyForecast darkSkyForecast) {
 
@@ -19,7 +23,7 @@ public class DarkSkyForecastConverterService {
         return false;
     }
 
-    public Boolean findMatchingTime(DarkSkyForecast darkSkyForecast) { //TODO: Should this return hourlyData and throw Exception if not found?
+    public Boolean findMatchingTime(DarkSkyForecast darkSkyForecast) throws Exception { //TODO: throw Exception and test
 
         List<HourlyData> hourlyDataList = darkSkyForecast.getHourly().getData();
 
@@ -29,13 +33,13 @@ public class DarkSkyForecastConverterService {
                 return true;
             }
         }
-        System.out.println("Error: Unable to find matching times");
-        return false;
+        throw new Exception("Error: Unable to find matching times");
+
     }
 
     public WeatherData convertForecast(DarkSkyForecast darkSkyForecast) {
 
-        WeatherData weatherData = new WeatherData();
+        WeatherData weatherData = weatherDataFactory.newWeatherData();
         weatherData.setMoonPhase(darkSkyForecast.getDaily().getData().get(0).getMoonPhase());
 
         HourlyData hourlyData = darkSkyForecast.getHourly().getData().get(13);

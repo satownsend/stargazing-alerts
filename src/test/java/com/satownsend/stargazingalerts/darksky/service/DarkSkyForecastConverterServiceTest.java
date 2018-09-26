@@ -2,11 +2,13 @@ package com.satownsend.stargazingalerts.darksky.service;
 
 import com.satownsend.stargazingalerts.darksky.model.forecast.*;
 import com.satownsend.stargazingalerts.weatherdata.model.WeatherData;
+import com.satownsend.stargazingalerts.weatherdata.model.WeatherDataFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -27,6 +29,8 @@ public class DarkSkyForecastConverterServiceTest {
 
     @Autowired
     private DarkSkyForecastConverterService service;
+
+    @MockBean private WeatherDataFactory weatherDataFactory;
 
     @TestConfiguration
     static class DarkSkyForecastConverterServiceTestContextConfiguration {
@@ -129,7 +133,7 @@ public class DarkSkyForecastConverterServiceTest {
     }
 
     @Test
-    public void testFindMatchingTime() {
+    public void testFindMatchingTime_whenFound() throws Exception {
         // TODO
         // Incomplete. Started to play around on my lunch, but ran out of time.
         DarkSkyForecast darkSkyForecast = mock(DarkSkyForecast.class);
@@ -173,7 +177,7 @@ public class DarkSkyForecastConverterServiceTest {
 
     }
     /*
-        public Boolean findMatchingTime(DarkSkyForecast darkSkyForecast) {
+    public Boolean findMatchingTime(DarkSkyForecast darkSkyForecast) throws Exception {
 
         List<HourlyData> hourlyDataList = darkSkyForecast.getHourly().getData();
 
@@ -183,64 +187,88 @@ public class DarkSkyForecastConverterServiceTest {
                 return true;
             }
         }
-        System.out.println("Error: Unable to find matching times");
-        return false;
+        throw new Exception("Error: Unable to find matching times");
+
     }
      */
+
     @Test
-    public void testConvertForecast() { //TODO
+    public void testFindMatchingTime_whenUnableToFind() throws Exception {
 
-        DarkSkyForecast darkSkyForecast = new DarkSkyForecast();
+        //TODO
+    }
 
-        Daily daily = new Daily();
-        darkSkyForecast.setDaily(daily);
-        List<DailyData> dData = new ArrayList<DailyData>();
-        daily.setData(dData);
-        DailyData dailyData = new DailyData();
-        dData.add(dailyData);
-        dailyData.setMoonPhase(0.5);
+    @Test
+    public void testConvertForecast() {
 
-        Hourly hourly = new Hourly();
-        darkSkyForecast.setHourly(hourly);
-        List<HourlyData> hData = mock(List.class);
-        hourly.setData(hData);
-        HourlyData hourlyData = new HourlyData();
-        when(hData.get(12)).thenReturn(hourlyData);
-        hourlyData.setTime(12);
-        hData.add(hourlyData);
-        hourlyData.setCloudCover(0.1);
-        hData.add(hourlyData);
-        hourlyData.setPrecipProbability(0.02);
-        hData.add(hourlyData);
-        hourlyData.setTemperature(50.0);
-        hData.add(hourlyData);
-        hourlyData.setWindSpeed(10.0);
+        DarkSkyForecast darkSkyForecast = mock(DarkSkyForecast.class);
+
+        Daily daily = mock(Daily.class);
+        when(darkSkyForecast.getDaily()).thenReturn(daily);
+
+        List<DailyData> dailyDataList = new ArrayList<>();
+        when(daily.getData()).thenReturn(dailyDataList);
+
+        DailyData dailyData = mock(DailyData.class);
+        when(dailyData.getMoonPhase()).thenReturn(0.5);
+        dailyDataList.add(dailyData);
+
+        Hourly hourly = mock(Hourly.class);
+        when(darkSkyForecast.getHourly()).thenReturn(hourly);
+
+        List<HourlyData> hourlyDataList = new ArrayList<>();
+        hourly.setData(hourlyDataList);
+
+        HourlyData hourlyData0 = mock(HourlyData.class);
+        HourlyData hourlyData1 = mock(HourlyData.class);
+        HourlyData hourlyData2 = mock(HourlyData.class);
+        HourlyData hourlyData3 = mock(HourlyData.class);
+        HourlyData hourlyData4 = mock(HourlyData.class);
+        HourlyData hourlyData5 = mock(HourlyData.class);
+        HourlyData hourlyData6 = mock(HourlyData.class);
+        HourlyData hourlyData7 = mock(HourlyData.class);
+        HourlyData hourlyData8 = mock(HourlyData.class);
+        HourlyData hourlyData9 = mock(HourlyData.class);
+        HourlyData hourlyData10 = mock(HourlyData.class);
+        HourlyData hourlyData11 = mock(HourlyData.class);
+        HourlyData hourlyData12 = mock(HourlyData.class);
+        HourlyData hourlyData13 = mock(HourlyData.class);
+
+        hourlyDataList.add(hourlyData0);
+        hourlyDataList.add(hourlyData1);
+        hourlyDataList.add(hourlyData2);
+        hourlyDataList.add(hourlyData3);
+        hourlyDataList.add(hourlyData4);
+        hourlyDataList.add(hourlyData5);
+        hourlyDataList.add(hourlyData6);
+        hourlyDataList.add(hourlyData7);
+        hourlyDataList.add(hourlyData8);
+        hourlyDataList.add(hourlyData9);
+        hourlyDataList.add(hourlyData10);
+        hourlyDataList.add(hourlyData11);
+        hourlyDataList.add(hourlyData12);
+        hourlyDataList.add(hourlyData13);
+
+        when(hourly.getData()).thenReturn(hourlyDataList);
+
+        WeatherData weatherData = mock(WeatherData.class);
+        when(weatherDataFactory.newWeatherData()).thenReturn(weatherData);
+        when(weatherData.getMoonPhase()).thenReturn(0.5);
+        when(weatherData.getForecastDataTime()).thenReturn(1525788663);
+        when(weatherData.getCloudCover()).thenReturn(0.05);
+        when(weatherData.getPrecipProbability()).thenReturn(0.01);
+        when(weatherData.getTemperature()).thenReturn(60.0);
+        when(weatherData.getWindSpeed()).thenReturn(5.0);
 
         WeatherData result = service.convertForecast(darkSkyForecast);
+
         assertThat(result.getMoonPhase()).isEqualTo(0.5);
-        assertThat(result.getCloudCover()).isEqualTo(0.1);
-        assertThat(result.getPrecipProbability()).isEqualTo(0.02);
-        assertThat(result.getTemperature()).isEqualTo(50.0);
-        assertThat(result.getWindSpeed()).isEqualTo(10.0);
-        assertThat(result.getForecastDataTime()).isEqualTo(12);
+        assertThat(result.getCloudCover()).isEqualTo(0.05);
+        assertThat(result.getPrecipProbability()).isEqualTo(0.01);
+        assertThat(result.getTemperature()).isEqualTo(60.0);
+        assertThat(result.getWindSpeed()).isEqualTo(5.0);
+        assertThat(result.getForecastDataTime()).isEqualTo(1525788663);
+        assertThat(result).isEqualTo(weatherData);
+
     }
 }
-/*
-
-    public WeatherData convertForecast(DarkSkyForecast darkSkyForecast) {
-
-        WeatherData weatherData = new WeatherData();
-        weatherData.setMoonPhase(darkSkyForecast.getDaily().getData().get(0).getMoonPhase());
-
-        HourlyData hourlyData = darkSkyForecast.getHourly().getData().get(13);
-
-        weatherData.setForecastDataTime(hourlyData.getTime());
-        weatherData.setCloudCover(hourlyData.getCloudCover());
-        weatherData.setPrecipProbability(hourlyData.getPrecipProbability());
-        weatherData.setTemperature(hourlyData.getTemperature());
-        weatherData.setWindSpeed(hourlyData.getWindSpeed());
-
-        return weatherData;
-    }
-}
- */

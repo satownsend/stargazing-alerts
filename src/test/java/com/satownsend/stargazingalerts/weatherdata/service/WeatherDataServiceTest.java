@@ -24,7 +24,6 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +69,7 @@ public class WeatherDataServiceTest {
     }
 
     @Test
-    public void testRunAlert_whenTimesMatch() throws IOException {
+    public void testRunAlert_whenTimesMatch() throws Exception {
 
         User user = mock(User.class);
         when(user.getId()).thenReturn(1L);
@@ -105,7 +104,7 @@ public class WeatherDataServiceTest {
     }
 
     @Test
-    public void testRunAlert_whenTimesDoNotMatch() throws IOException {
+    public void testRunAlert_whenTimesDoNotMatch() throws Exception {
 
         User user = mock(User.class);
         when(user.getId()).thenReturn(1L);
@@ -141,7 +140,7 @@ public class WeatherDataServiceTest {
     }
 
     @Test
-    public void testRunNoAlert() throws IOException {
+    public void testRunNoAlert() throws Exception {
 
         User user = mock(User.class);
         when(user.getId()).thenReturn(1L);
@@ -171,7 +170,7 @@ public class WeatherDataServiceTest {
     }
 
     @Test
-    public void testRunTimeMismatch_whenFound() throws IOException {
+    public void testRunTimeMismatch_whenFound() throws Exception {
 
         User user = mock(User.class);
         when(user.getId()).thenReturn(1L);
@@ -207,7 +206,7 @@ public class WeatherDataServiceTest {
     }
 
     @Test
-    public void testRunTimeMismatch_whenNotFound() throws IOException {
+    public void testRunTimeMismatch_whenNotFound() throws Exception {
 
         User user = mock(User.class);
         when(user.getId()).thenReturn(1L);
@@ -232,7 +231,7 @@ public class WeatherDataServiceTest {
     }
 
     @Test
-    public void testRunForAllUsers() throws IOException {
+    public void testRunForAllUsers() throws Exception {
 
         List<User> users = new ArrayList<User>();
 

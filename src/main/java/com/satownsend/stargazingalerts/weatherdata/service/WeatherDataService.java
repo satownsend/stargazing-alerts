@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-
 @Service
 public class WeatherDataService {
 
@@ -42,12 +40,12 @@ public class WeatherDataService {
     private AlertFactory alertFactory;
 
     @Scheduled(cron = "0 0 9 * * *")
-    public void runForAllUsers() throws IOException {
+    public void runForAllUsers() throws Exception {
 
         for (User user: userDao.findAll()) run(user);
     }
 
-    public void run(User user) throws IOException {
+    public void run(User user) throws Exception {
 
         System.out.println("About to look up user");
         User u = userDao.findById(user.getId());

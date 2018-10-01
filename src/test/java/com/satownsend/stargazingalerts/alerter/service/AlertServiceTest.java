@@ -48,6 +48,7 @@ public class AlertServiceTest {
 
         User user = mock(User.class);
         when(user.getEmail()).thenReturn("test@mail.com");
+        when(user.getName()).thenReturn("Scott");
 
         Email from = mock(Email.class);
         when(sendGridFactory.newEmail("nonreply@satownsend.com")).thenReturn(from);
@@ -58,10 +59,10 @@ public class AlertServiceTest {
         when(sendGridFactory.newEmail("test@mail.com")).thenReturn(to);
 
         Alert alert = mock(Alert.class);
-        when(alert.getAlertMessage()).thenReturn("The sky is clear.");
+        when(alert.getAlertMessage()).thenReturn("Hi Scott! The sky is clear.");
 
         Content content = mock(Content.class);
-        when(sendGridFactory.newContent("text/plain", "The sky is clear.")).thenReturn(content);
+        when(sendGridFactory.newContent("text/plain", alert.getAlertMessage())).thenReturn(content);
 
         Mail mail = mock(Mail.class);
         when(sendGridFactory.newMail(from, subject, to, content)).thenReturn(mail);
@@ -74,7 +75,7 @@ public class AlertServiceTest {
         service.sendAlert(alert, user);
         verify(sendGridFactory).newEmail("nonreply@satownsend.com");
         verify(sendGridFactory).newEmail("test@mail.com");
-        verify(sendGridFactory).newContent("text/plain", "The sky is clear.");
+        verify(sendGridFactory).newContent("text/plain", "Hi " + user.getName() + "! The sky is clear.");
         verify(sendGridFactory).newMail(from, subject, to, content);
         verify(sendGridFactory).newRequest();
         verify(request).setMethod(Method.POST);

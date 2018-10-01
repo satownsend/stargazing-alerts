@@ -39,7 +39,7 @@ public class WeatherDataService {
     @Autowired
     private AlertFactory alertFactory;
 
-    @Scheduled(cron = "0 0 9 * * *")
+    @Scheduled(cron = "0 0 9 * * *") // Timer set to run everyday at 9 am. I'll eventually change to later in the day.
     public void runForAllUsers() throws Exception {
 
         for (User user: userDao.findAll()) run(user);
@@ -58,14 +58,14 @@ public class WeatherDataService {
             System.out.println("Times do not match");
             converterService.findMatchingTime(darkSkyForecast);
         }
-        //TODO: convertForecast is called even if the matching time isn't found. Making findMatchingTime throw an exception if not found should fix this.
+
         System.out.println("Converting forecast");
         WeatherData weatherData = converterService.convertForecast(darkSkyForecast);
 
         System.out.println("Checking if forecast is good");
         if (analyzerService.isForecastGood(weatherData)) {
             Alert alert = alertFactory.newAlert();
-            alert.setAlertMessage("Tonight's forecast is looking good!");
+            alert.setAlertMessage("Hey " + u.getName() + "! Tonight's forecast is looking good!");
             alertService.sendAlert(alert, user);
             System.out.println("Forecast is good!");
         } else {

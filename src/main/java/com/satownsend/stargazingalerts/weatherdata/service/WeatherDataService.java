@@ -8,6 +8,7 @@ import com.satownsend.stargazingalerts.analyzer.service.ForecastAnalyzerService;
 import com.satownsend.stargazingalerts.darksky.model.forecast.DarkSkyForecast;
 import com.satownsend.stargazingalerts.darksky.service.DarkSkyConsumerService;
 import com.satownsend.stargazingalerts.darksky.service.DarkSkyForecastConverterService;
+import com.satownsend.stargazingalerts.geocoder.service.GeocoderService;
 import com.satownsend.stargazingalerts.user.dao.UserDao;
 import com.satownsend.stargazingalerts.user.model.User;
 import com.satownsend.stargazingalerts.weatherdata.model.WeatherData;
@@ -39,6 +40,9 @@ public class WeatherDataService {
     @Autowired
     private AlertFactory alertFactory;
 
+    @Autowired
+    private GeocoderService geocodingService;
+
     @Scheduled(cron = "0 0 9 * * *") // Timer set to run everyday at 9 am. I'll eventually change to later in the day.
     public void runForAllUsers() throws Exception {
 
@@ -47,14 +51,13 @@ public class WeatherDataService {
 
     public void run(User user) throws Exception {
 
-        System.out.println("About to look up user");
-        User u = userDao.findById(user.getId());
-
         System.out.println("Finding Dark Sky Forecast");
-        DarkSkyForecast darkSkyForecast = darkSkyConsumerService.findDarkSkyForecast(u.getLatitude(), u.getLongitude());
+        DarkSkyForecast darkSkyForecast = darkSkyConsumerService.findDarkSkyForecast(user.getLatitude(),
+                user.getLongitude());
 
         System.out.println("Checking if times match");
         if (!converterService.checkTimesMatch(darkSkyForecast)) {
+
             System.out.println("Times do not match");
             converterService.findMatchingTime(darkSkyForecast);
         }
@@ -64,12 +67,18 @@ public class WeatherDataService {
 
         System.out.println("Checking if forecast is good");
         if (analyzerService.isForecastGood(weatherData)) {
+
             Alert alert = alertFactory.newAlert();
-            alert.setAlertMessage("Hey " + u.getName() + "! Tonight's forecast is looking good!");
+            alert.setAlertMessage("Hey " + user.getName() + "! Tonight's forecast in " + user.getCity() +
+                    " is looking good!  Check out a detailed forecast here: https://darksky.net/forecast/" +
+                    user.getLatitude() + "," + user.getLongitude() + "/us12/en");
+
             alertService.sendAlert(alert, user);
-            System.out.println("Forecast is good!");
+
+            System.out.println("Forecast is good");
+
         } else {
-            System.out.println("Not good.");
+            System.out.println("Not good");
         }
     }
 }

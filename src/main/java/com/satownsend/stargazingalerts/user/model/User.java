@@ -22,6 +22,12 @@ public class User {
     @Column(name = "longitude")
     private Double longitude;
 
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "state")
+    private String state;
+
     public User() {
     }
 
@@ -65,4 +71,19 @@ public class User {
         this.longitude = longitude;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 }

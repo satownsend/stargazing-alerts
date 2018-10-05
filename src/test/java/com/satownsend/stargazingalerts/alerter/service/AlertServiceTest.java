@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.sql.DataSource;
 import java.io.IOException;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.H2;
 
@@ -55,6 +56,7 @@ public class AlertServiceTest {
         when(user.getName()).thenReturn("Scott");
         when(user.getLatitude()).thenReturn(40.5);
         when(user.getLongitude()).thenReturn(-78.5);
+        when(user.getCity()).thenReturn("Pittsburgh");
 
         WeatherData weatherData = mock(WeatherData.class);
         when(weatherData.getNameOfMoonPhase()).thenReturn("New");
@@ -96,6 +98,7 @@ public class AlertServiceTest {
         verify(request).setEndpoint("mail/send");
         verify(request).setBody("The body");
         verify(sendGrid).api(request);
+        assertThat(subject).isEqualTo("Stargazing Alert for " + user.getCity());
 
     }
 }

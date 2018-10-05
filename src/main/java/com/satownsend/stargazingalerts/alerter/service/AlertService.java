@@ -21,7 +21,7 @@ public class AlertService {
     public void sendAlert(Alert alert, User user) throws IOException {
 
         Email from = sendGridFactory.newEmail("nonreply@satownsend.com");
-        String subject = "Stargazing Alert";
+        String subject = "Stargazing Alert for " + user.getCity();
         Email to = sendGridFactory.newEmail(user.getEmail());
         Content content = sendGridFactory.newContent("text/plain", alert.getAlertMessage());
         Mail mail = sendGridFactory.newMail(from, subject, to, content);

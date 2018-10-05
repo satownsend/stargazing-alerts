@@ -64,14 +64,17 @@ public class WeatherDataService {
 
         System.out.println("Converting forecast");
         WeatherData weatherData = converterService.convertForecast(darkSkyForecast);
+        converterService.translateMoonPhase(weatherData);
+        System.out.println("Moon phase: " + weatherData.getNameOfMoonPhase());
 
         System.out.println("Checking if forecast is good");
         if (analyzerService.isForecastGood(weatherData)) {
 
             Alert alert = alertFactory.newAlert();
             alert.setAlertMessage("Hey " + user.getName() + "! Tonight's forecast in " + user.getCity() +
-                    " is looking good!  Check out a detailed forecast here: https://darksky.net/forecast/" +
-                    user.getLatitude() + "," + user.getLongitude() + "/us12/en");
+                    " is looking good!  Tonight's moon phase: " + weatherData.getNameOfMoonPhase() + ".  Check out a " +
+                    "detailed weather forecast here: https://darksky.net/forecast/" + user.getLatitude() + "," +
+                    user.getLongitude() + "/us12/en");
 
             alertService.sendAlert(alert, user);
 

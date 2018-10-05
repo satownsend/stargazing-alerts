@@ -28,6 +28,9 @@ public class WeatherData {
     @Column(name = "windSpeed")
     private Double windSpeed;
 
+    @Column(name = "nameOfMoonPhase")
+    private String nameOfMoonPhase;
+
     public WeatherData() {
     }
 
@@ -85,5 +88,13 @@ public class WeatherData {
 
     public void setWindSpeed(Double windSpeed) {
         this.windSpeed = windSpeed;
+    }
+
+    public String getNameOfMoonPhase() {
+        return nameOfMoonPhase;
+    }
+
+    public void setNameOfMoonPhase(String nameOfMoonPhase) {
+        this.nameOfMoonPhase = nameOfMoonPhase;
     }
 }

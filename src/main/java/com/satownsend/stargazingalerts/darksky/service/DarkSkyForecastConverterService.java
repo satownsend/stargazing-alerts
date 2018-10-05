@@ -52,4 +52,51 @@ public class DarkSkyForecastConverterService {
 
         return weatherData;
     }
+
+    public WeatherData translateMoonPhase(WeatherData weatherData) {
+
+        if (weatherData.getMoonPhase() <= 0.02 && weatherData.getMoonPhase() >= 0.98) {
+
+            weatherData.setNameOfMoonPhase("New");
+        }
+
+        else if (weatherData.getMoonPhase() >= 0.03 && weatherData.getMoonPhase() <= 0.23) {
+
+            weatherData.setNameOfMoonPhase("Waxing Crescent");
+        }
+
+        else if (weatherData.getMoonPhase() >= 0.24 && weatherData.getMoonPhase() <= 0.27) {
+
+            weatherData.setNameOfMoonPhase("First Quarter");
+        }
+
+        else if (weatherData.getMoonPhase() >= 0.28 && weatherData.getMoonPhase() <= 0.47) {
+
+            weatherData.setNameOfMoonPhase("Waxing Gibbous");
+        }
+
+        else if (weatherData.getMoonPhase() >= 0.48 && weatherData.getMoonPhase() <= 0.52) {
+
+            weatherData.setNameOfMoonPhase("Full");
+        }
+
+        else if (weatherData.getMoonPhase() >= 0.53 && weatherData.getMoonPhase() <= 0.73) {
+
+            weatherData.setNameOfMoonPhase("Waning Gibbous");
+        }
+
+        else if (weatherData.getMoonPhase() >= 0.74 && weatherData.getMoonPhase() <= 0.76) {
+
+            weatherData.setNameOfMoonPhase("Last Quarter");
+        }
+
+        else if (weatherData.getMoonPhase() >= 0.77 && weatherData.getMoonPhase() <= 0.97) {
+
+            weatherData.setNameOfMoonPhase("Waning Crescent");
+        }
+
+        return weatherData;
+
+    }
+
 }
